@@ -11,7 +11,7 @@
 #define __PION_LOGGER_HEADER__
 
 #include <pion/config.hpp>
-
+#include "dvacore/debug/Debug.h"
 
 #if defined(PION_USE_LOG4CXX)
 
@@ -266,11 +266,12 @@
     #define PION_LOG_SETLEVEL_UP(LOG)       { ++LOG.m_priority; }
     #define PION_LOG_SETLEVEL_DOWN(LOG)     { --LOG.m_priority; }
 
-    #define PION_LOG_DEBUG(LOG, MSG)    if (LOG.m_priority <= pion::logger::LOG_LEVEL_DEBUG) { std::cout << time(NULL) << " DEBUG " << LOG.m_name << ' ' << MSG << std::endl; }
-    #define PION_LOG_INFO(LOG, MSG)     if (LOG.m_priority <= pion::logger::LOG_LEVEL_INFO) { std::cout << time(NULL) << " INFO " << LOG.m_name << ' ' << MSG << std::endl; }
-    #define PION_LOG_WARN(LOG, MSG)     if (LOG.m_priority <= pion::logger::LOG_LEVEL_WARN) { std::cerr << time(NULL) << " WARN " << LOG.m_name << ' ' << MSG << std::endl; }
-    #define PION_LOG_ERROR(LOG, MSG)    if (LOG.m_priority <= pion::logger::LOG_LEVEL_ERROR) { std::cerr << time(NULL) << " ERROR " << LOG.m_name << ' ' << MSG << std::endl; }
-    #define PION_LOG_FATAL(LOG, MSG)    if (LOG.m_priority <= pion::logger::LOG_LEVEL_FATAL) { std::cerr << time(NULL) << " FATAL " << LOG.m_name << ' ' << MSG << std::endl; }
+	
+    #define PION_LOG_DEBUG(LOG, MSG)    /*if (LOG.m_priority <= pion::logger::LOG_LEVEL_DEBUG)*/ { DVA_TRACE_ALWAYS("pion", 9, "DEBUG " << LOG.m_name << ' ' << MSG); }
+    #define PION_LOG_INFO(LOG, MSG)     /*if (LOG.m_priority <= pion::logger::LOG_LEVEL_INFO)*/ { DVA_TRACE_ALWAYS("pion", 8, "INFO " << LOG.m_name << ' ' << MSG); }
+    #define PION_LOG_WARN(LOG, MSG)     /*if (LOG.m_priority <= pion::logger::LOG_LEVEL_WARN)*/ { DVA_TRACE_ALWAYS("pion", 3, "WARN " << LOG.m_name << ' ' << MSG); }
+    #define PION_LOG_ERROR(LOG, MSG)    /*if (LOG.m_priority <= pion::logger::LOG_LEVEL_ERROR)*/ { DVA_TRACE_ALWAYS("pion", 2, "ERROR " << LOG.m_name << ' ' << MSG); }
+    #define PION_LOG_FATAL(LOG, MSG)    /*if (LOG.m_priority <= pion::logger::LOG_LEVEL_FATAL)*/ { DVA_TRACE_ALWAYS("pion", 1, "FATAL " << LOG.m_name << ' ' << MSG); }
 
 #endif
 

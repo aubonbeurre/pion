@@ -998,6 +998,7 @@ bool parser::parse_multipart_form_data(ihash_multimap& dict,
     std::string header_name;
     std::string header_value;
     std::string field_name;
+	std::string file_name; // ADOBE
     std::string field_value;
     bool found_parameter = false;
     bool save_current_field = true;
@@ -1012,6 +1013,7 @@ bool parser::parse_multipart_form_data(ihash_multimap& dict,
                 header_name.clear();
                 header_value.clear();
                 field_name.clear();
+				file_name.clear();
                 field_value.clear();
                 save_current_field = true;
                 ptr += boundary.size() - 1;
@@ -1076,7 +1078,9 @@ bool parser::parse_multipart_form_data(ihash_multimap& dict,
                     // reached the end of the value -> check if it's important
                     if (boost::algorithm::iequals(header_name, types::HEADER_CONTENT_TYPE)) {
                         // only keep fields that have a text type or no type
-                        save_current_field = boost::algorithm::iequals(header_value.substr(0, 5), "text/");
+                        //save_current_field = boost::algorithm::iequals(header_value.substr(0, 5), "text/");
+						// ADOBE hack
+						save_current_field = true;
                     } else if (boost::algorithm::iequals(header_name, types::HEADER_CONTENT_DISPOSITION)) {
                         // get current field from content-disposition header
                         std::size_t name_pos = header_value.find("name=\"");
@@ -1085,6 +1089,12 @@ bool parser::parse_multipart_form_data(ihash_multimap& dict,
                                 field_name += header_value[name_pos];
                             }
                         }
+						name_pos = header_value.find("filename=\"");
+						if (name_pos != std::string::npos) {
+							for (name_pos += 10; name_pos < header_value.size() && header_value[name_pos] != '\"'; ++name_pos) {
+								file_name += header_value[name_pos];
+							}
+						}
                     }
                     // clear values and start parsing next header
                     header_name.clear();
@@ -1124,6 +1134,9 @@ bool parser::parse_multipart_form_data(ihash_multimap& dict,
                 // add the field to the query dictionary
                 dict.insert( std::make_pair(field_name, field_value) );
                 found_parameter = true;
+				if (!file_name.empty()) {
+					dict.insert( std::make_pair(field_name + "_filename", file_name) );
+				}
                 // skip ahead to next field
                 parse_state = MP_PARSE_START;
                 ptr = next_ptr;

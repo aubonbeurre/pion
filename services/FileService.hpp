@@ -300,6 +300,7 @@ protected:
                       const boost::filesystem::path& file_path,
                       const bool placeholder);
 
+public:
     /**
      * searches for a MIME type that matches a file
      *
@@ -308,6 +309,7 @@ protected:
      */
     static std::string findMIMEType(const std::string& file_name);
 
+protected:
     void sendNotFoundResponse(pion::http::request_ptr& http_request_ptr,
                               pion::tcp::connection_ptr& tcp_conn);
 
