@@ -745,6 +745,11 @@ void FileService::createMIMETypes(void) {
 
     // set the static pointer
     m_mime_types_ptr = &mime_types;
+
+	// ADBE
+	mime_types["mp4"] = "video/mp4";
+	mime_types["m4v"] = "video/mp4";
+	mime_types["wmv"] = "video/x-ms-wmv";
 }
 
 
